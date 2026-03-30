@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mark Lorenz: Frame by Frame 2.0</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ============================================================
+       HEADER — fixed, transparent → solid on scroll
+       ============================================================ -->
+  <header class="header" id="header">
+    <div class="header-inner">
+
+      <!-- LOGO
+           ─────────────────────────────────────────────────────
+           To replace: swap the inline SVG below with your own
+           <img src="images/your-logo.png" class="logo-img" />
+           ───────────────────────────────────────────────────── -->
+      <a href="#" class="logo" aria-label="marklorenz2.0 home">
+        <!-- Custom M + clapperboard SVG logo (built-in, no file needed) -->
+        <svg class="logo-svg" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <!-- Outer circle -->
+          <circle cx="22" cy="22" r="21" stroke="#D4AF37" stroke-width="1.2"/>
+          <!-- Clapperboard body -->
+          <rect x="10" y="18" width="24" height="16" rx="2" fill="#0A1F44" stroke="#D4AF37" stroke-width="1"/>
+          <!-- Clapperboard top bar (clapper) -->
+          <rect x="10" y="14" width="24" height="5" rx="1.5" fill="#D4AF37"/>
+          <!-- Clapper diagonal stripes -->
+          <line x1="14" y1="14" x2="12" y2="19" stroke="#0A1F44" stroke-width="1.5"/>
+          <line x1="19" y1="14" x2="17" y2="19" stroke="#0A1F44" stroke-width="1.5"/>
+          <line x1="24" y1="14" x2="22" y2="19" stroke="#0A1F44" stroke-width="1.5"/>
+          <line x1="29" y1="14" x2="27" y2="19" stroke="#0A1F44" stroke-width="1.5"/>
+          <!-- Letter M in clapperboard body -->
+          <text x="22" y="31" text-anchor="middle"
+                font-family="Georgia, serif" font-size="11" font-weight="700"
+                fill="#D4AF37" letter-spacing="0.5">M</text>
+        </svg>
+        <span class="logo-text">marklorenz2.0</span>
+      </a>
+
+      <!-- Hamburger (mobile) -->
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <!-- Navigation -->
+      <nav class="nav" id="nav">
+        <ul>
+          <li><a href="#" class="nav-link" data-modal="home">Home</a></li>
+          <li><a href="#" class="nav-link" data-modal="me">Me Holistically</a></li>
+          <li><a href="#" class="nav-link" data-modal="future">Future Self as an IT Professional</a></li>
+          <li><a href="#" class="nav-link" data-modal="version">Version 2.0 Plan</a></li>
+        </ul>
+      </nav>
+
+    </div>
+  </header>
+
+
+  <!-- ============================================================
+       HERO — full-viewport, canvas bg, two-column layout
+       ============================================================ -->
+  <section class="hero" id="hero">
+    <canvas class="hero-canvas" id="heroCanvas" aria-hidden="true"></canvas>
+    <div class="hero-overlay" aria-hidden="true"></div>
+
+    <div class="hero-content">
+
+      <!-- Left: text -->
+      <div class="hero-text">
+        <p class="hero-eyebrow">marklorenz2.0</p>
+        <h1 class="hero-title">
+          <span>Mark Lorenz</span>
+          <span class="gold">Frame by Frame 2.0</span>
+        </h1>
+        <blockquote class="hero-motto">
+          Sa bawat kuha at galaw ng eksena,<br />
+          Pangarap ko'y unti-unting nagiging totoo sa bawat kamera.
+        </blockquote>
+        <p class="hero-intro">
+          Welcome to <em>Mark Lorenz: Frame by Frame 2.0</em> — a personal website
+          that tells the story of my journey, growth, and dreams.
+          Just like a film made of many scenes, my life is shaped by
+          different experiences that help me become a better version of myself.
+        </p>
+        <p class="hero-intro">
+          A 19-year-old BSIT student with a passion for filmmaking, multimedia creation,
+          video editing, and storytelling.
+        </p>
+        <div class="hero-cta-row">
+          <button class="btn-primary" data-modal="home">Explore My Story</button>
+        </div>
+
+        <!-- Camera icon — tooltip + click opens gallery -->
+        <div class="camera-wrap" id="cameraWrap" role="button" tabindex="0" aria-label="Open frame gallery">
+          <img
+            src="images/camera.png"
+            alt="Film camera"
+            class="camera-img"
+            id="cameraImg"
+            loading="lazy"
+          />
+          <span class="camera-tooltip" aria-hidden="true">My Film Projects</span>
+        </div>
+
+      </div>
+
+      <!-- Right: profile photo
+           ═══════════════════════════════════════════════
+           PROFILE PHOTO
+           To replace: change src to your own image path.
+           Keep id="profile-photo" for JS reference.
+           Recommended: PNG, transparent bg, 600×800 px
+           ═══════════════════════════════════════════════ -->
+      <div class="hero-portrait-wrap">
+        <div class="portrait-glow"    aria-hidden="true"></div>
+        <div class="portrait-ring-1"  aria-hidden="true"></div>
+        <div class="portrait-ring-2"  aria-hidden="true"></div>
+        <img
+          src="images/profile.png"
+          alt="Mark Lorenz — portrait"
+          class="hero-portrait"
+          id="profile-photo"
+          loading="eager"
+        />
+      </div>
+
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="scroll-hint" aria-hidden="true">
+      <span class="scroll-line"></span>
+      <p>Scroll</p>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       MODAL OVERLAY
+       ============================================================ -->
+  <div class="modal-overlay" id="modalOverlay" aria-hidden="true">
+    <div class="modal-box" id="modalBox" role="dialog" aria-modal="true">
+      <button class="modal-close" id="modalClose" aria-label="Close">&times;</button>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="footer" id="footer">
+    <div class="footer-inner">
+
+      <!-- Brand -->
+      <div class="footer-brand">
+        <svg class="footer-logo-svg" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="22" cy="22" r="21" stroke="#D4AF37" stroke-width="1.2"/>
+          <rect x="10" y="18" width="24" height="16" rx="2" fill="#0A1F44" stroke="#D4AF37" stroke-width="1"/>
+          <rect x="10" y="14" width="24" height="5" rx="1.5" fill="#D4AF37"/>
+          <line x1="14" y1="14" x2="12" y2="19" stroke="#0A1F44" stroke-width="1.5"/>
+          <line x1="19" y1="14" x2="17" y2="19" stroke="#0A1F44" stroke-width="1.5"/>
+          <line x1="24" y1="14" x2="22" y2="19" stroke="#0A1F44" stroke-width="1.5"/>
+          <line x1="29" y1="14" x2="27" y2="19" stroke="#0A1F44" stroke-width="1.5"/>
+          <text x="22" y="31" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#D4AF37">M</text>
+        </svg>
+        <div>
+          <p class="footer-name">marklorenz2.0</p>
+          <p class="footer-tagline">Frame by Frame 2.0</p>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="footer-divider"></div>
+
+      <!-- Contact & Social
+           ═══════════════════════════════════════════════════════
+           PLACEHOLDERS — replace each value with your real info:
+             data-value="..." → displayed text / link label
+             href="..."       → actual URL or tel: / mailto:
+           ═══════════════════════════════════════════════════════ -->
+      <div class="footer-grid">
+
+        <div class="footer-col">
+          <p class="footer-col-title">Contact</p>
+          <ul class="footer-list">
+            <li>
+              <!-- PHONE: replace +63 000 000 0000 with your number -->
+              <a href="tel:+630000000000" class="footer-link" id="footer-phone">
+                <svg viewBox="0 0 20 20" fill="none" class="f-icon"><path d="M3 4a1 1 0 011-1h2.5a1 1 0 01.97.757l.7 2.8a1 1 0 01-.274.985L6.5 8.914a11.042 11.042 0 005.586 5.586l1.372-1.396a1 1 0 01.985-.274l2.8.7A1 1 0 0118 14.5V17a1 1 0 01-1 1C8.163 18 2 11.837 2 5a1 1 0 011-1z" stroke="#D4AF37" stroke-width="1.2"/></svg>
+                +63 969 392 3650
+              </a>
+            </li>
+            <li>
+              <!-- UNIVERSITY: replace with your university name -->
+              <span class="footer-link static" id="footer-university">
+                <svg viewBox="0 0 20 20" fill="none" class="f-icon"><path d="M10 2L2 6l8 4 8-4-8-4z" stroke="#D4AF37" stroke-width="1.2"/><path d="M2 6v6M18 6v6M6 8v5a4 4 0 008 0V8" stroke="#D4AF37" stroke-width="1.2" stroke-linecap="round"/></svg>
+                Pangasinan State University
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <p class="footer-col-title">Social Media</p>
+          <ul class="footer-list">
+            <li>
+              <!-- FACEBOOK: replace # with your Facebook profile URL -->
+              <a href="https://www.facebook.com/share/1FtkDCBoAe/" class="footer-link" id="footer-facebook" target="_blank" rel="noopener">
+                <svg viewBox="0 0 20 20" fill="none" class="f-icon"><rect x="2" y="2" width="16" height="16" rx="3" stroke="#D4AF37" stroke-width="1.2"/><path d="M11 10h2l.5-2H11V7c0-.5.2-1 1-1h1.5V4S12.8 4 11.8 4C9.9 4 9 5.1 9 7v1H7v2h2v5h2v-5z" stroke="#D4AF37" stroke-width="0.8" fill="none"/></svg>
+                Mark Lorenz Joaquin Posadas
+              </a>
+            </li>
+            <li>
+              <!-- INSTAGRAM: replace # with your Instagram profile URL -->
+              <a href="https://www.instagram.com/imsolow_rnz?igsh=MTR1YjRqc3RxeHB3Mg==" class="footer-link" id="footer-instagram" target="_blank" rel="noopener">
+                <svg viewBox="0 0 20 20" fill="none" class="f-icon"><rect x="2" y="2" width="16" height="16" rx="4" stroke="#D4AF37" stroke-width="1.2"/><circle cx="10" cy="10" r="3.5" stroke="#D4AF37" stroke-width="1.2"/><circle cx="14.5" cy="5.5" r="0.8" fill="#D4AF37"/></svg>
+                imsolow_rnz
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <p class="footer-col-title">Project</p>
+          <ul class="footer-list">
+            <li><span class="footer-link static">BSIT Student</span></li>
+            <li><span class="footer-link static">Frame by Frame 2.0</span></li>
+            <li><span class="footer-link static">Personal Website</span></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Bottom bar -->
+      <div class="footer-bottom">
+        <p>Created by <strong>Mark Lorenz Posadas</strong></p>
+        <span class="footer-sep"></span>
+        <p class="footer-copy">&copy; 2026 marklorenz2.0. All rights reserved.</p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       GALLERY OVERLAY — cinema poster wall
+       ============================================================ -->
+  <div class="gallery-overlay" id="galleryOverlay" aria-hidden="true">
+    <div class="gallery-box" id="galleryBox">
+
+      <!-- Header -->
+      <div class="gallery-header">
+        <div class="gallery-header-left">
+          <span class="gallery-eyebrow">Directorial Work</span>
+          <h2 class="gallery-title">Frame Gallery</h2>
+        </div>
+        <button class="gallery-close" id="galleryClose" aria-label="Close gallery">&times;</button>
+      </div>
+
+      <!-- Cinema atmosphere strip -->
+      <div class="gallery-lights" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <!-- Poster grid -->
+      <div class="gallery-grid">
+
+        <figure class="poster-card">
+          <div class="poster-img-wrap">
+            <img src="images/poster-silent-campus.jpg"
+                 alt="Silent Campus — A Film by Tech Visual Legacy"
+                 class="poster-img" loading="lazy" />
+          </div>
+          <figcaption class="poster-caption">
+            <span class="poster-title">Silent Campus</span>
+            <span class="poster-sub">Directed by Mark Lorenz Posadas</span>
+          </figcaption>
+        </figure>
+
+        <figure class="poster-card">
+          <div class="poster-img-wrap">
+            <img src="images/poster-heneral-luna.jpg"
+                 alt="Heneral Luna — Melodramatic Musical Theatre"
+                 class="poster-img" loading="lazy" />
+          </div>
+          <figcaption class="poster-caption">
+            <span class="poster-title">Heneral Luna</span>
+            <span class="poster-sub">Melodramatic Musical Theatre</span>
+          </figcaption>
+        </figure>
+
+        <figure class="poster-card">
+          <div class="poster-img-wrap">
+            <img src="images/poster-last-masterpiece.jpg"
+                 alt="The Last Masterpiece — A Documentary"
+                 class="poster-img" loading="lazy" />
+          </div>
+          <figcaption class="poster-caption">
+            <span class="poster-title">The Last Masterpiece</span>
+            <span class="poster-sub">A Documentary</span>
+          </figcaption>
+        </figure>
+
+      </div><!-- /.gallery-grid -->
+
+      <!-- Cinema floor dots -->
+      <div class="gallery-footer-strip" aria-hidden="true"></div>
+
+    </div><!-- /.gallery-box -->
+  </div><!-- /.gallery-overlay -->
+
+  <script src="script.js"></script>
+</body>
+</html>
