@@ -230,8 +230,7 @@ document.querySelectorAll('[data-modal]').forEach(el => {
   el.addEventListener('click', e => {
     e.preventDefault();
     openModal(el.dataset.modal, el);
-    navEl.classList.remove('open');
-    hamburger.classList.remove('open');
+    closeNav();
   });
 });
 
@@ -239,21 +238,46 @@ document.querySelectorAll('[data-modal]').forEach(el => {
 /* ================================================================
    HAMBURGER / MOBILE NAV
    ================================================================ */
-const hamburger = document.getElementById('hamburger');
-const navEl     = document.getElementById('nav');
+const hamburger  = document.getElementById('hamburger');
+const navEl      = document.getElementById('nav');
+const navBackdrop = document.getElementById('navBackdrop');
+
+function openNav() {
+  hamburger.classList.add('open');
+  navEl.classList.add('open');
+  if (navBackdrop) {
+    navBackdrop.classList.add('open');
+    navBackdrop.setAttribute('aria-hidden', 'false');
+  }
+  document.body.style.overflow = 'hidden';
+}
+
+function closeNav() {
+  hamburger.classList.remove('open');
+  navEl.classList.remove('open');
+  if (navBackdrop) {
+    navBackdrop.classList.remove('open');
+    navBackdrop.setAttribute('aria-hidden', 'true');
+  }
+  document.body.style.overflow = '';
+}
 
 hamburger.addEventListener('click', () => {
-  hamburger.classList.toggle('open');
-  navEl.classList.toggle('open');
+  navEl.classList.contains('open') ? closeNav() : openNav();
 });
+
+/* Close nav when clicking the backdrop */
+if (navBackdrop) {
+  navBackdrop.addEventListener('click', closeNav);
+}
 
 /* Close nav when clicking outside on mobile */
 document.addEventListener('click', e => {
   if (navEl.classList.contains('open') &&
       !navEl.contains(e.target) &&
-      !hamburger.contains(e.target)) {
-    navEl.classList.remove('open');
-    hamburger.classList.remove('open');
+      !hamburger.contains(e.target) &&
+      !(navBackdrop && navBackdrop.contains(e.target))) {
+    closeNav();
   }
 });
 

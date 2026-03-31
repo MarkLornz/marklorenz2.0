@@ -855,6 +855,10 @@ blockquote { border: none; margin: 0; padding: 0; }
 }
 
 
+/* Nav backdrop — hidden on desktop, shown only via mobile media query */
+.nav-backdrop { display: none; }
+
+
 /* ================================================================
    RESPONSIVE — TABLET (≤ 960px)
    ================================================================ */
@@ -880,22 +884,70 @@ blockquote { border: none; margin: 0; padding: 0; }
    ================================================================ */
 @media (max-width: 768px) {
   .hamburger { display: flex; }
+
+  /* Dimming backdrop behind the nav drawer */
+  .nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+    background: rgba(0, 0, 0, 0.55);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity    var(--t-med) var(--ease-in-out),
+      visibility var(--t-med) var(--ease-in-out);
+    pointer-events: none;
+  }
+  .nav-backdrop.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
   .nav {
     position: fixed;
-    inset: 0 0 0 32%;
-    background: rgba(2, 6, 18, 0.98);
-    padding: 5.5rem 1.8rem 2rem;
+    /* Full height, right side drawer — no gap at top */
+    top: 0; right: 0; bottom: 0;
+    left: 30%;
+    /* Fully opaque, no backdrop-filter tricks */
+    background: #020c1e;
+    border-left: 1px solid rgba(212, 175, 55, 0.22);
+    padding: 6rem 2rem 2.5rem;
     transform: translateX(100%);
     transition: transform var(--t-med) var(--ease-out);
-    border-left: 1px solid rgba(212,175,55,0.14);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
     will-change: transform;
-    z-index: 800;
+    /* Above backdrop, below hamburger */
+    z-index: 1060;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* Gold glow accent on the left edge */
+    box-shadow: -4px 0 32px rgba(0, 0, 0, 0.7),
+                -1px 0 0 rgba(212, 175, 55, 0.1);
   }
   .nav.open { transform: translateX(0); }
-  .nav ul   { flex-direction: column; gap: 1.8rem; }
-  .nav-link { font-size: 0.9rem; color: var(--text-main); }
+  .nav ul   { flex-direction: column; gap: 2rem; }
+  .nav-link {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.85);
+    letter-spacing: 0.12em;
+    display: block;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.07);
+    transition: color var(--t-fast) var(--ease-out),
+                padding-left var(--t-fast) var(--ease-out);
+  }
+  .nav-link:hover,
+  .nav-link:focus {
+    color: var(--gold);
+    padding-left: 0.4rem;
+  }
+  /* Hamburger stays on top of everything */
+  .hamburger {
+    z-index: 1080;
+    position: relative;
+  }
+
   .modal-body { padding: 0.5rem 1.3rem 2rem; }
 }
 
