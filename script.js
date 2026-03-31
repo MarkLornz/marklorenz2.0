@@ -284,17 +284,43 @@ document.addEventListener('click', e => {
 
 /* ================================================================
    STICKY HEADER — rAF-throttled scroll listener
+   Hides hamburger when footer comes into view on mobile.
    ================================================================ */
 const header  = document.getElementById('header');
+const footer  = document.getElementById('footer');
 let   ticking = false;
+
+function updateOnScroll() {
+  header.classList.toggle('scrolled', window.scrollY > 50);
+
+  /* Hamburger hide/show based on footer visibility — mobile only */
+  if (window.innerWidth <= 768 && footer) {
+    const footerTop = footer.getBoundingClientRect().top;
+    const viewH     = window.innerHeight;
+    /* Footer has entered the viewport */
+    if (footerTop < viewH) {
+      hamburger.classList.add('hamburger--hidden');
+      /* Also close nav if it was open */
+      if (navEl.classList.contains('open')) closeNav();
+    } else {
+      hamburger.classList.remove('hamburger--hidden');
+    }
+  }
+
+  ticking = false;
+}
 
 window.addEventListener('scroll', () => {
   if (!ticking) {
-    requestAnimationFrame(() => {
-      header.classList.toggle('scrolled', window.scrollY > 50);
-      ticking = false;
-    });
+    requestAnimationFrame(updateOnScroll);
     ticking = true;
+  }
+}, { passive: true });
+
+/* Re-evaluate on resize (e.g. orientation change) */
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 768) {
+    hamburger.classList.remove('hamburger--hidden');
   }
 }, { passive: true });
 
