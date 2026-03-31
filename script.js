@@ -167,8 +167,9 @@ Life may feel difficult at times, especially when responsibilities become overwh
 const overlay   = document.getElementById('modalOverlay');
 const modalBody = document.getElementById('modalBody');
 const closeBtn  = document.getElementById('modalClose');
+const modalBox  = document.getElementById('modalBox');
 
-function openModal(key) {
+function openModal(key, triggerEl) {
   const data = modalContent[key];
   if (!data) return;
 
@@ -180,6 +181,22 @@ function openModal(key) {
     ${data.html}
   `;
 
+  /* Animate from the trigger element's position */
+  if (triggerEl && window.innerWidth > 768) {
+    const rect = triggerEl.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top  + rect.height / 2;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    /* Convert to % relative to viewport centre where modal box is */
+    const ox = ((centerX / vw) * 100).toFixed(1) + '%';
+    const oy = ((centerY / vh) * 100).toFixed(1) + '%';
+    modalBox.style.transformOrigin = `${ox} ${oy}`;
+  } else {
+    modalBox.style.transformOrigin = '50% 30%';
+  }
+
+  overlay.classList.remove('modal-closing');
   overlay.classList.add('active');
   overlay.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
@@ -193,9 +210,15 @@ function openModal(key) {
 }
 
 function closeModal() {
+  overlay.classList.add('modal-closing');
   overlay.classList.remove('active');
   overlay.setAttribute('aria-hidden', 'true');
-  document.body.style.overflow = '';
+  const onEnd = () => {
+    overlay.classList.remove('modal-closing');
+    overlay.removeEventListener('transitionend', onEnd);
+    document.body.style.overflow = '';
+  };
+  overlay.addEventListener('transitionend', onEnd);
 }
 
 closeBtn.addEventListener('click', closeModal);
@@ -206,7 +229,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 document.querySelectorAll('[data-modal]').forEach(el => {
   el.addEventListener('click', e => {
     e.preventDefault();
-    openModal(el.dataset.modal);
+    openModal(el.dataset.modal, el);
     navEl.classList.remove('open');
     hamburger.classList.remove('open');
   });
@@ -364,19 +387,28 @@ window.addEventListener('scroll', () => {
    GALLERY — camera click opens poster wall
    ================================================================ */
 (function gallerySystem() {
-  const cameraWrap   = document.getElementById('cameraWrap');
+  const cameraWrap     = document.getElementById('cameraWrap');
   const galleryOverlay = document.getElementById('galleryOverlay');
   const galleryClose   = document.getElementById('galleryClose');
   if (!cameraWrap || !galleryOverlay) return;
 
   function openGallery() {
+    galleryOverlay.classList.remove('closing');
     galleryOverlay.classList.add('active');
     galleryOverlay.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
   }
+
   function closeGallery() {
+    galleryOverlay.classList.add('closing');
     galleryOverlay.classList.remove('active');
     galleryOverlay.setAttribute('aria-hidden', 'true');
+    /* Wait for close animation then hide */
+    const onEnd = () => {
+      galleryOverlay.classList.remove('closing');
+      galleryOverlay.removeEventListener('transitionend', onEnd);
+    };
+    galleryOverlay.addEventListener('transitionend', onEnd);
     document.body.style.overflow = '';
   }
 
