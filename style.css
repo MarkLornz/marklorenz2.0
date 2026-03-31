@@ -841,6 +841,10 @@ blockquote { border: none; margin: 0; padding: 0; }
 /* ================================================================
    KEYFRAMES — transform + opacity only (GPU composited)
    ================================================================ */
+@keyframes navItemIn {
+  from { opacity: 0; transform: translateX(18px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -902,13 +906,14 @@ blockquote { border: none; margin: 0; padding: 0; }
 @media (max-width: 768px) {
   .hamburger { display: flex; }
 
-  /* Dimming backdrop behind the nav drawer */
+  /* ── Full-screen dimming backdrop ────────────────────────── */
   .nav-backdrop {
     display: block;
     position: fixed;
+    /* Cover the ENTIRE screen — not relative to header */
     inset: 0;
     z-index: 1050;
-    background: rgba(0, 0, 0, 0.55);
+    background: rgba(0, 0, 0, 0.62);
     opacity: 0;
     visibility: hidden;
     transition:
@@ -922,43 +927,96 @@ blockquote { border: none; margin: 0; padding: 0; }
     pointer-events: auto;
   }
 
+  /* ── Side drawer — anchored to full visual viewport ───────── */
   .nav {
     position: fixed;
-    /* Full height, right side drawer — no gap at top */
-    top: 0; right: 0; bottom: 0;
+    /*
+     * KEY FIX: anchor to the full visual viewport (0 → 0),
+     * NOT relative to the header. This survives browser chrome
+     * collapsing / expanding on scroll. The nav itself has
+     * padding-top to push links below the header visually.
+     */
+    top: 0;
+    right: 0;
+    bottom: 0;
     left: 30%;
-    /* Fully opaque, no backdrop-filter tricks */
+    /* Let the browser own the height — no calc() tricks */
+    height: 100%;
     background: #020c1e;
     border-left: 1px solid rgba(212, 175, 55, 0.22);
-    padding: 6rem 2rem 2.5rem;
+    /*
+     * Push content down by the header height + breathing room.
+     * This is purely visual padding — the element itself still
+     * fills the whole viewport height correctly.
+     */
+    padding: calc(var(--header-h) + 1.6rem) 2rem 3rem;
+    /* Slide in from the right */
     transform: translateX(100%);
-    transition: transform var(--t-med) var(--ease-out);
+    transition: transform 0.38s var(--ease-out);
     will-change: transform;
-    /* Above backdrop, below hamburger */
     z-index: 1060;
     overflow-y: auto;
     overscroll-behavior: contain;
-    /* Gold glow accent on the left edge */
-    box-shadow: -4px 0 32px rgba(0, 0, 0, 0.7),
-                -1px 0 0 rgba(212, 175, 55, 0.1);
+    box-shadow:
+      -4px 0 40px rgba(0, 0, 0, 0.75),
+      -1px 0 0 rgba(212, 175, 55, 0.12),
+      inset 0 1px 0 rgba(212, 175, 55, 0.08);
   }
   .nav.open { transform: translateX(0); }
-  .nav ul   { flex-direction: column; gap: 2rem; }
+
+  /* Gold top accent line on the open drawer */
+  .nav.open::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+
+  .nav ul   { flex-direction: column; gap: 0; }
   .nav-link {
-    font-size: 0.95rem;
-    color: rgba(255, 255, 255, 0.85);
-    letter-spacing: 0.12em;
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: rgba(255, 255, 255, 0.72);
     display: block;
-    padding: 0.3rem 0;
-    border-bottom: 1px solid rgba(212, 175, 55, 0.07);
-    transition: color var(--t-fast) var(--ease-out),
-                padding-left var(--t-fast) var(--ease-out);
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.08);
+    transition:
+      color        var(--t-fast) var(--ease-out),
+      padding-left var(--t-fast) var(--ease-out);
+    position: relative;
+  }
+  /* Gold dot indicator on hover */
+  .nav-link::before {
+    content: '';
+    position: absolute;
+    left: -1.2rem;
+    top: 50%;
+    transform: translateY(-50%) scale(0);
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+    transition: transform var(--t-fast) var(--ease-out);
   }
   .nav-link:hover,
   .nav-link:focus {
     color: var(--gold);
-    padding-left: 0.4rem;
+    padding-left: 0.5rem;
   }
+  .nav-link:hover::before,
+  .nav-link:focus::before {
+    transform: translateY(-50%) scale(1);
+  }
+  /* Staggered slide-in for nav items when drawer opens */
+  .nav.open .nav-link {
+    animation: navItemIn 0.4s var(--ease-out) both;
+  }
+  .nav.open li:nth-child(1) .nav-link { animation-delay: 0.08s; }
+  .nav.open li:nth-child(2) .nav-link { animation-delay: 0.14s; }
+  .nav.open li:nth-child(3) .nav-link { animation-delay: 0.20s; }
+  .nav.open li:nth-child(4) .nav-link { animation-delay: 0.26s; }
+
   /* Hamburger stays on top of everything */
   .hamburger {
     z-index: 1080;
