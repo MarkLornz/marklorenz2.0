@@ -226,17 +226,23 @@ blockquote { border: none; margin: 0; padding: 0; }
   display: block;
 }
 
-/* Gradient overlay */
+/* Gradient overlay — dark cinematic, desaturated navy, near-black */
 .hero-overlay {
   position: absolute;
   inset: 0;
   z-index: 1;
   background:
-    linear-gradient(105deg, rgba(5,15,34,0.88) 0%, rgba(0,0,0,0.75) 60%, rgba(0,0,0,0.55) 100%);
+    linear-gradient(
+      112deg,
+      rgba(3,  8, 18, 0.96) 0%,
+      rgba(5, 12, 28, 0.88) 35%,
+      rgba(4, 10, 22, 0.72) 65%,
+      rgba(2,  5, 12, 0.55) 100%
+    );
   pointer-events: none;
 }
 
-/* Subtle vertical film-strip lines */
+/* Layer 1 — vertical film-strip lines (neutral, barely visible) */
 .hero::before {
   content: '';
   position: absolute;
@@ -246,9 +252,48 @@ blockquote { border: none; margin: 0; padding: 0; }
   background-image: repeating-linear-gradient(
     90deg,
     transparent 0, transparent 79px,
-    rgba(212,175,55,0.018) 79px, rgba(212,175,55,0.018) 80px
+    rgba(180, 180, 200, 0.016) 79px, rgba(180, 180, 200, 0.016) 80px
   );
 }
+
+/* Layer 2 — dark cinematic texture: grain + deep vignette */
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background-image:
+    /* Deep edge vignette — heavy, pulls corners to near-black */
+    radial-gradient(ellipse at 50% 48%,
+      transparent 28%,
+      rgba(0, 0, 4, 0.72) 100%
+    ),
+    /* Subtle wall grain — horizontal scan lines at very low opacity */
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 3px,
+      rgba(255, 255, 255, 0.006) 3px,
+      rgba(255, 255, 255, 0.006) 4px
+    ),
+    /* Fine diagonal weave — mimics film grain texture */
+    repeating-linear-gradient(
+      52deg,
+      transparent 0px,
+      transparent 2px,
+      rgba(255, 255, 255, 0.007) 2px,
+      rgba(255, 255, 255, 0.007) 3px
+    ),
+    repeating-linear-gradient(
+      -52deg,
+      transparent 0px,
+      transparent 2px,
+      rgba(255, 255, 255, 0.005) 2px,
+      rgba(255, 255, 255, 0.005) 3px
+    );
+}
+
 
 /* Hero content wrapper */
 .hero-content {
@@ -1296,9 +1341,8 @@ blockquote { border: none; margin: 0; padding: 0; }
 .poster-card {
   position: relative;
   border-radius: 3px;
-  overflow: hidden;
+  overflow: visible; /* allow caption to breathe */
   cursor: default;
-  /* Staggered fade-in when gallery opens */
   opacity: 0;
   transform: translateY(16px);
   animation: fadeUp var(--t-med) var(--ease-out) both;
@@ -1307,10 +1351,12 @@ blockquote { border: none; margin: 0; padding: 0; }
 .poster-card:nth-child(2) { animation-delay: 0.16s; }
 .poster-card:nth-child(3) { animation-delay: 0.24s; }
 
+/* Image wrapper — clips the image scale + hosts the tooltip overlay */
 .poster-img-wrap {
+  position: relative; /* tooltip anchors here */
   width: 100%;
   aspect-ratio: 2 / 3;
-  overflow: hidden;
+  overflow: hidden;   /* clips image zoom; tooltip is inside so not clipped */
   border-radius: 3px;
   display: block;
 }
@@ -1328,16 +1374,52 @@ blockquote { border: none; margin: 0; padding: 0; }
   will-change: transform;
 }
 .poster-card:hover .poster-img {
-  transform: scale(1.04) translateY(-4px);
-  filter: brightness(1.08) drop-shadow(0 16px 32px rgba(0,0,0,0.7))
-          drop-shadow(0 0 18px rgba(212,175,55,0.22));
-}
-.poster-img-wrap {
-  cursor: default;
-  overflow: hidden;
+  transform: scale(1.05) translateY(-6px);
+  filter: brightness(0.72)
+          drop-shadow(0 16px 32px rgba(0,0,0,0.7));
 }
 
-/* Caption */
+/* ── Hover title tooltip — overlays on the poster image ─────── */
+.poster-hover-label {
+  position: absolute;
+  /* Centered vertically in the image, slides up on hover */
+  bottom: 1.4rem;
+  left: 0.8rem;
+  right: 0.8rem;
+  text-align: center;
+  /* Pill label — same visual language as camera-tooltip */
+  background: rgba(3, 10, 28, 0.88);
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0.42rem 0.8rem;
+  border-radius: 2px;
+  pointer-events: none;
+  /* Hidden by default */
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity   0.26s var(--ease-out),
+    transform 0.26s var(--ease-out);
+  will-change: opacity, transform;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  /* Subtle gold glow on the border */
+  box-shadow: 0 0 14px rgba(212, 175, 55, 0.15),
+              inset 0 1px 0 rgba(212, 175, 55, 0.12);
+  /* Stays inside the overflow:hidden container — no clipping issue */
+  z-index: 2;
+}
+.poster-card:hover .poster-hover-label {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Caption below the poster */
 .poster-caption {
   padding: 0.75rem 0.2rem 0;
   display: flex;

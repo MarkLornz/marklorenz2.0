@@ -349,12 +349,19 @@ window.addEventListener('resize', () => {
   }, { passive: true });
   resize();
 
-  /* Static orb definitions — avoid allocation per frame */
+  /* Static orb definitions — gold accents + blue atmosphere */
   const orbs = [
-    { fx: 0.16, fy: 0.25, r: 300, sp: 0.50, amp: 0.042 },
-    { fx: 0.80, fy: 0.62, r: 340, sp: 0.35, amp: 0.036 },
-    { fx: 0.48, fy: 0.84, r: 210, sp: 0.78, amp: 0.028 },
-    { fx: 0.28, fy: 0.68, r: 170, sp: 1.05, amp: 0.022 },
+    /* Gold bokeh — warm accents */
+    { fx: 0.16, fy: 0.25, r: 280, sp: 0.50, amp: 0.042, r_: 212, g_: 175, b_: 55,  a_: 0.072 },
+    { fx: 0.80, fy: 0.62, r: 320, sp: 0.35, amp: 0.036, r_: 212, g_: 175, b_: 55,  a_: 0.052 },
+    /* Blue atmosphere — cinematic depth */
+    { fx: 0.55, fy: 0.18, r: 440, sp: 0.26, amp: 0.032, r_: 30,  g_: 88,  b_: 210, a_: 0.130 },
+    { fx: 0.08, fy: 0.65, r: 380, sp: 0.40, amp: 0.038, r_: 18,  g_: 62,  b_: 175, a_: 0.110 },
+    { fx: 0.88, fy: 0.12, r: 300, sp: 0.58, amp: 0.028, r_: 45,  g_: 110, b_: 230, a_: 0.085 },
+    { fx: 0.42, fy: 0.52, r: 250, sp: 0.72, amp: 0.020, r_: 20,  g_: 70,  b_: 180, a_: 0.065 },
+    /* Faint gold — depth layer */
+    { fx: 0.48, fy: 0.84, r: 200, sp: 0.78, amp: 0.028, r_: 212, g_: 175, b_: 55,  a_: 0.038 },
+    { fx: 0.28, fy: 0.70, r: 160, sp: 1.05, amp: 0.022, r_: 212, g_: 175, b_: 55,  a_: 0.028 },
   ];
 
   function draw() {
@@ -364,26 +371,28 @@ window.addEventListener('resize', () => {
     const W = canvas.width;
     const H = canvas.height;
 
-    /* Base gradient — deep blue to black */
+    /* Base gradient — rich blue tones, no pure black */
     const base = ctx.createLinearGradient(
-      W * (0.28 + 0.14 * Math.sin(t)), 0,
-      W * (0.72 + 0.10 * Math.cos(t * 0.72)), H
+      W * (0.22 + 0.12 * Math.sin(t)),      0,
+      W * (0.78 + 0.08 * Math.cos(t * 0.72)), H
     );
-    base.addColorStop(0,   '#0A1F44');
-    base.addColorStop(0.48,'#060f28');
-    base.addColorStop(1,   '#000000');
+    base.addColorStop(0,    '#0e2658');  /* rich navy */
+    base.addColorStop(0.30, '#0a1e48');  /* deep royal blue */
+    base.addColorStop(0.58, '#071535');  /* dark blue */
+    base.addColorStop(0.82, '#040e22');  /* near-midnight blue */
+    base.addColorStop(1,    '#020912'); /* very dark, still blue-tinted not black */
     ctx.fillStyle = base;
     ctx.fillRect(0, 0, W, H);
 
-    /* Gold bokeh orbs */
+    /* Animated orbs — gold warmth + blue atmosphere */
     for (let i = 0; i < orbs.length; i++) {
       const o  = orbs[i];
-      const bx = (o.fx + o.amp * Math.sin(t * o.sp + i))       * W;
+      const bx = (o.fx + o.amp * Math.sin(t * o.sp + i))        * W;
       const by = (o.fy + o.amp * Math.cos(t * o.sp + i * 0.65)) * H;
       const rg = ctx.createRadialGradient(bx, by, 0, bx, by, o.r);
-      rg.addColorStop(0,    'rgba(212,175,55,0.075)');
-      rg.addColorStop(0.52, 'rgba(212,175,55,0.018)');
-      rg.addColorStop(1,    'rgba(0,0,0,0)');
+      rg.addColorStop(0,    `rgba(${o.r_},${o.g_},${o.b_},${o.a_})`);
+      rg.addColorStop(0.50, `rgba(${o.r_},${o.g_},${o.b_},${+(o.a_ * 0.22).toFixed(3)})`);
+      rg.addColorStop(1,    `rgba(${o.r_},${o.g_},${o.b_},0)`);
       ctx.fillStyle = rg;
       ctx.fillRect(0, 0, W, H);
     }
