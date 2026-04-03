@@ -483,3 +483,181 @@ window.addEventListener('resize', () => {
     if (e.key === 'Escape' && galleryOverlay.classList.contains('active')) closeGallery();
   });
 })();
+
+
+/* ================================================================
+   FEATURE 3 — CINEMATIC QUOTE BUBBLE (updated)
+   - Triggers only on profile image click.
+   - Appears at the click location, not centered.
+   - Letter-by-letter typing, auto-close with fade-out.
+   ================================================================ */
+(function cinematicQuotePopup() {
+  const profilePhoto = document.getElementById('profile-photo');
+  const bubble       = document.getElementById('quoteBubble');
+  const quoteTextEl  = document.getElementById('quoteText');
+  if (!profilePhoto || !bubble || !quoteTextEl) return;
+
+  const quotes = [
+    "Frame by frame, I turn ideas into stories worth remembering.",
+    "Every frame I create is a step closer to the story I dream to tell.",
+    "Step by step, frame by frame, I build the person I want to become.",
+    "Editing is not just cutting clips—it's building emotions.",
+    "Behind every video I edit is a story waiting to be seen."
+  ];
+
+  let isOpen      = false;
+  let typingTimer = null;
+  let closeTimer  = null;
+  let lastIndex   = -1;
+
+  /* ── Pick a random quote, never repeating the previous one ── */
+  function pickQuote() {
+    let idx;
+    do { idx = Math.floor(Math.random() * quotes.length); }
+    while (idx === lastIndex && quotes.length > 1);
+    lastIndex = idx;
+    return quotes[idx];
+  }
+
+  /* ── Position the bubble near the click, clamped to viewport ── */
+  function positionBubble(clickX, clickY) {
+    /* Temporarily show (invisible) to measure size */
+    bubble.style.visibility = 'hidden';
+    bubble.style.display    = 'block';
+
+    const bw = bubble.offsetWidth;
+    const bh = bubble.offsetHeight;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const pad = 12; /* minimum gap from viewport edge */
+
+    /* Default: appear above-right of click point */
+    let left = clickX + 16;
+    let top  = clickY - bh - 12;
+
+    /* Flip left if it overflows right edge */
+    if (left + bw + pad > vw) left = clickX - bw - 16;
+    /* Clamp left */
+    left = Math.max(pad, left);
+
+    /* Flip below if it overflows top */
+    if (top < pad) top = clickY + 16;
+    /* Clamp top */
+    top = Math.max(pad, Math.min(top, vh - bh - pad));
+
+    bubble.style.left    = left + 'px';
+    bubble.style.top     = top  + 'px';
+    bubble.style.display = '';
+    bubble.style.visibility = '';
+  }
+
+  /* ── Typing animation with blinking cursor ── */
+  function typeText(text, el, speed, onDone) {
+    el.textContent = '';
+
+    const cursor = document.createElement('span');
+    cursor.className = 'quote-cursor';
+    cursor.setAttribute('aria-hidden', 'true');
+    el.appendChild(cursor);
+
+    let i = 0;
+    function tick() {
+      if (i < text.length) {
+        el.insertBefore(document.createTextNode(text[i]), cursor);
+        i++;
+        typingTimer = setTimeout(tick, speed);
+      } else {
+        /* Fade cursor out once typing finishes */
+        setTimeout(() => {
+          cursor.style.animation = 'none';
+          cursor.style.opacity   = '0';
+        }, 600);
+        if (onDone) onDone();
+      }
+    }
+    tick();
+  }
+
+  /* ── Open: position at click coords, show, then type ── */
+  function openQuote(e) {
+    if (isOpen) return;
+    isOpen = true;
+
+    const quote = pickQuote();
+    const speed = 38; /* ms per character (35–45 range) */
+
+    /* Use pointer coords for precise placement */
+    const clickX = e.clientX || (e.touches && e.touches[0].clientX) || window.innerWidth  / 2;
+    const clickY = e.clientY || (e.touches && e.touches[0].clientY) || window.innerHeight / 2;
+
+    /* Clear text, position, then reveal */
+    quoteTextEl.textContent = '';
+    positionBubble(clickX, clickY);
+
+    bubble.setAttribute('aria-hidden', 'false');
+    bubble.classList.remove('fading-out');
+
+    /* Force reflow so transition fires */
+    void bubble.offsetWidth;
+    bubble.classList.add('visible');
+
+    /* Start typing */
+    typeText(quote, quoteTextEl, speed, () => {
+      /* Auto-close: 2s base + 50ms per character */
+      const readDuration = 2000 + quote.length * 50;
+      closeTimer = setTimeout(closeQuote, readDuration);
+    });
+  }
+
+  /* ── Close: fade out, then fully hide and reset ── */
+  function closeQuote() {
+    clearTimeout(typingTimer);
+    clearTimeout(closeTimer);
+
+    bubble.classList.add('fading-out');
+    bubble.classList.remove('visible');
+
+    setTimeout(() => {
+      bubble.classList.remove('fading-out');
+      bubble.setAttribute('aria-hidden', 'true');
+      quoteTextEl.textContent = '';
+      isOpen = false;
+    }, 480);
+  }
+
+  /* ── Event bindings ── */
+  /* Profile image click only */
+  profilePhoto.addEventListener('click', openQuote);
+
+  /* Keyboard: Enter or Space on the portrait */
+  profilePhoto.setAttribute('tabindex', '0');
+  profilePhoto.setAttribute('role', 'button');
+  profilePhoto.setAttribute('aria-label', 'Click for a cinematic quote');
+  profilePhoto.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      /* Synthesise a centre-of-image position for keyboard users */
+      const rect = profilePhoto.getBoundingClientRect();
+      openQuote({ clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 });
+    }
+  });
+
+  /* Click on the bubble itself to dismiss early */
+  bubble.addEventListener('click', closeQuote);
+
+  /* ── CHANGE: Close immediately when clicking anywhere else on the page ── */
+  document.addEventListener('click', e => {
+    if (!isOpen) return;
+    /* Allow profile-photo click to be handled by openQuote (it triggers first) */
+    if (profilePhoto.contains(e.target)) return;
+    /* Allow clicks inside the bubble itself (handled above) */
+    if (bubble.contains(e.target)) return;
+    /* Any other click on the document → close the popup */
+    closeQuote();
+  }, true); /* useCapture=true so this fires before any inner handler */
+
+  /* Escape key to dismiss */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && isOpen) closeQuote();
+  });
+})();

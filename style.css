@@ -1477,3 +1477,214 @@ blockquote { border: none; margin: 0; padding: 0; }
   }
   .poster-card:nth-child(3) { grid-column: auto; max-width: 100%; }
 }
+
+
+/* ================================================================
+   FEATURE 1 — CINEMATIC TITLE REVEAL (updated: no light sweep)
+   Fade-in + slow cinematic zoom. Light sweep removed.
+   ================================================================ */
+.hero-title {
+  position: relative;
+}
+
+/* First line: "Mark Lorenz" */
+.hero-title span:first-child {
+  display: block;
+  opacity: 0;
+  transform: scale(0.92) translateY(10px);
+  animation: cinematicTitleReveal 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+  will-change: transform, opacity;
+}
+
+/* Second line: "Frame by Frame 2.0" */
+.hero-title .gold {
+  display: block;
+  opacity: 0;
+  transform: scale(0.92) translateY(10px);
+  animation: cinematicTitleReveal 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.7s both;
+  will-change: transform, opacity;
+}
+
+@keyframes cinematicTitleReveal {
+  0%   { opacity: 0; transform: scale(0.92) translateY(14px); }
+  60%  { opacity: 1; transform: scale(1.012) translateY(-2px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+
+/* ================================================================
+   FEATURE 3 — CINEMATIC QUOTE BUBBLE (click-positioned)
+   JS sets top/left via inline style. No full-screen overlay.
+   ================================================================ */
+
+/* The bubble itself — fixed, positioned by JS at click coords */
+.quote-bubble {
+  position: fixed;
+  z-index: 1200;
+  width: clamp(260px, 80vw, 400px);
+  background: rgba(6, 14, 32, 0.94);
+  border: 1px solid rgba(212, 175, 55, 0.42);
+  border-radius: 14px;
+  padding: 1.6rem 1.8rem 1.4rem;
+  box-shadow:
+    0 0 0 1px rgba(212, 175, 55, 0.07),
+    0 24px 60px rgba(0, 0, 0, 0.82),
+    0  0  36px rgba(212, 175, 55, 0.1),
+    inset 0 1px 0 rgba(212, 175, 55, 0.16);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  /* Hidden by default */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: scale(0.86) translateY(6px);
+  transition:
+    opacity   0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0.38s linear;
+  will-change: opacity, transform;
+}
+
+/* Decorative gold top bar */
+.quote-bubble::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 1.4rem; right: 1.4rem;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--gold) 25%,
+    var(--gold) 75%,
+    transparent 100%
+  );
+  border-radius: 0 0 2px 2px;
+}
+
+/* Visible state — JS adds this class */
+.quote-bubble.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: scale(1) translateY(0);
+}
+
+/* Fading out state */
+.quote-bubble.fading-out {
+  opacity: 0;
+  transform: scale(0.92) translateY(-4px);
+  transition:
+    opacity   0.45s var(--ease-in-out),
+    transform 0.45s var(--ease-in-out),
+    visibility 0.45s linear;
+}
+
+.quote-icon {
+  display: block;
+  font-size: 2.4rem;
+  color: var(--gold);
+  opacity: 0.45;
+  line-height: 1;
+  margin-bottom: 1rem;
+  font-family: Georgia, serif;
+  user-select: none;
+}
+
+.quote-text {
+  font-family: var(--font-display);
+  font-size: clamp(0.95rem, 2.2vw, 1.15rem);
+  line-height: 1.72;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.02em;
+  min-height: 3em;
+}
+
+/* Blinking cursor */
+.quote-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  background: var(--gold);
+  margin-left: 2px;
+  vertical-align: middle;
+  border-radius: 1px;
+  animation: cursorBlink 0.8s step-end infinite;
+  will-change: opacity;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.quote-author {
+  margin-top: 1.4rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.65;
+}
+
+/* Portrait clickable hint */
+.hero-portrait {
+  cursor: pointer;
+}
+
+/* ================================================================
+   NEW FEATURE 4 — CINEMATIC SCROLLBAR
+   ================================================================ */
+html {
+  scroll-behavior: smooth;
+}
+
+/* WebKit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #060c18;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    to bottom,
+    #b8922a 0%,
+    #D4AF37 40%,
+    #e8c84a 70%,
+    #b8922a 100%
+  );
+  border-radius: 4px;
+  border: 1px solid rgba(212, 175, 55, 0.18);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    to bottom,
+    #D4AF37 0%,
+    #f0d060 40%,
+    #D4AF37 100%
+  );
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.55);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #D4AF37 #060c18;
+}
+
+
+/* ================================================================
+   RESPONSIVE — feature updates
+   ================================================================ */
+@media (max-width: 600px) {
+  /* Quote bubble: slightly smaller padding on mobile */
+  .quote-bubble {
+    padding: 1.2rem 1.4rem 1.1rem;
+    width: clamp(230px, 88vw, 340px);
+  }
+  .quote-text {
+    font-size: 0.88rem;
+  }
+}
