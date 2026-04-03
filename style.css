@@ -35,7 +35,12 @@
 }
 
 /* ── RESET ──────────────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
 html { scroll-behavior: smooth; font-size: 16px; }
 body {
   font-family: var(--font-body);
@@ -50,6 +55,10 @@ ul { list-style: none; }
 button { cursor: pointer; border: none; background: none; font-family: inherit; color: inherit; }
 img, svg { display: block; max-width: 100%; }
 blockquote { border: none; margin: 0; padding: 0; }
+/* Remove mobile tap highlight globally */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
 
 
 /* ================================================================
@@ -1687,4 +1696,14 @@ html {
   .quote-text {
     font-size: 0.88rem;
   }
+}
+
+/ Others
+button, a {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:active, a:active {
+  transform: scale(0.96);
+  box-shadow: 0 0 12px rgba(212,175,55,0.4);
 }
