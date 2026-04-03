@@ -4,6 +4,16 @@
    All animations use only transform + opacity (GPU composited).
    ================================================================ */
 
+/* Fix mobile viewport height issue */
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+}
+
 /* ── DESIGN TOKENS ──────────────────────────────────────────── */
 :root {
   --blue:         #0A1F44;
@@ -219,7 +229,7 @@ blockquote { border: none; margin: 0; padding: 0; }
    ================================================================ */
 .hero {
   position: relative;
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
