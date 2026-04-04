@@ -1715,5 +1715,4 @@ button, a {
 
 button:active, a:active {
   transform: scale(0.96);
-  box-shadow: 0 0 12px rgba(212,175,55,0.4);
 }
