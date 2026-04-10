@@ -5342,17 +5342,22 @@ body.sidebar-collapsed .main-content {
   transform: translateY(-1px);
 }
 
-/* Light button in bottom nav */
+/* Light button in bottom nav — mirrors other .bottom-nav-item active states */
+/* Default: same muted white as all other nav buttons */
 .bottom-nav-light {
-  color: rgba(212,175,55,0.55);
+  color: rgba(255,255,255,0.40);
 }
-.bottom-nav-light.fl-active,
-.bottom-nav-light:active {
+/* fl-active = flashlight visible → looks exactly like .active on other buttons */
+.bottom-nav-light.fl-active {
   color: var(--gold);
 }
 .bottom-nav-light.fl-active .bni-icon {
-  filter: drop-shadow(0 0 7px rgba(212,175,55,0.80));
-  transform: translateY(-3px) scale(1.12);
+  filter: drop-shadow(0 0 6px rgba(212,175,55,0.65));
+  transform: translateY(-3px) scale(1.10);
+}
+.bottom-nav-light.fl-active .bni-label {
+  opacity: 1;
+  transform: translateY(-1px);
 }
 .bottom-nav-light.fl-active::before {
   transform: translateX(-50%) scaleX(1);
@@ -5500,15 +5505,9 @@ body.sidebar-collapsed .main-content {
   .main-content {
     padding-top: 52px;
   }
-  /* Hero — pull it up behind the topbar so no black gap shows on load */
-  .hero {
-    margin-top: -52px;
-    padding-top: 52px;
-    min-height: 100vh;
-  }
-  /* Hero content — shift text clear of the topbar */
+  /* Hero — remove extra top padding (topbar handles it) */
   .hero-content {
-    padding-top: 4rem !important;
+    padding-top: 2.5rem !important;
   }
 }
 

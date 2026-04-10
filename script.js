@@ -386,7 +386,8 @@ if (mobileTopbarLogo) {
   });
 }
 
-/* Bottom nav light button — toggles flashlight */
+/* Bottom nav light button — delegates to flashlightToggleBtn.
+   fl-active state is managed exclusively by showFlashlight/hideFlashlight. */
 const bottomNavLightBtn = document.getElementById('bottomNavLightBtn');
 if (bottomNavLightBtn) {
   bottomNavLightBtn.addEventListener('click', () => {
@@ -394,7 +395,6 @@ if (bottomNavLightBtn) {
     if (flashlightToggle) {
       flashlightToggle.click();
     }
-    /* fl-active is managed by showFlashlight() / hideFlashlight() */
   });
 }
 
@@ -1748,6 +1748,10 @@ modalContent['itdigital'] = {
   }
 
   /* Navbar toggle button */
+  /* On load, bottomNavLightBtn also gets fl-active since flashlight starts visible */
+  var _bnLightInit = document.getElementById('bottomNavLightBtn');
+  if (_bnLightInit) _bnLightInit.classList.add('fl-active');
+
   if (toggleBtn) {
     /* Start as active (flashlight visible by default) */
     toggleBtn.classList.add('fl-active');
