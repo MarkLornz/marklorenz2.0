@@ -3346,20 +3346,62 @@ button, a {
   border-radius: 18px;
   cursor: pointer;
   outline: none;
-  /* Entrance hidden state */
+  /* Hidden until JS adds .fb-visible */
   opacity: 0;
-  transform: translateY(40px) scale(0.97);
-  transition:
-    opacity     0.75s cubic-bezier(0.22, 1, 0.36, 1),
-    transform   0.75s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateY(40px) scale(0.98);
 }
-.feature-box:nth-child(1) { transition-delay: 0.06s; }
-.feature-box:nth-child(2) { transition-delay: 0.16s; }
-.feature-box:nth-child(3) { transition-delay: 0.26s; }
+
+/* ── Whole card + all content animates together via keyframe ── */
+@keyframes cardReveal {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
 
 .feature-box.fb-visible {
   opacity: 1;
   transform: translateY(0) scale(1);
+  animation: cardReveal 0.80s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.feature-box.fb-visible:nth-child(1) { animation-delay: 0.00s; }
+.feature-box.fb-visible:nth-child(2) { animation-delay: 0.10s; }
+.feature-box.fb-visible:nth-child(3) { animation-delay: 0.20s; }
+
+/* ── Inner content: no separate animation — moves with the card ── */
+.feature-box .fc-number,
+.feature-box .fc-icon-wrap,
+.feature-box .fc-body,
+.feature-box .fc-footer {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── Gold top bar — draw in once card is visible ── */
+.feature-box .fc-top-bar {
+  transform-origin: center;
+  transform: scaleX(0);
+  opacity: 0;
+  transition:
+    transform 0.50s cubic-bezier(0.22, 1, 0.36, 1) 0.60s,
+    opacity   0.35s ease 0.60s,
+    left      0.28s ease,
+    right     0.28s ease;
+}
+.feature-box.fb-visible .fc-top-bar {
+  transform: scaleX(1);
+  opacity: 0.6;
+}
+.feature-box.fb-visible:hover .fc-top-bar,
+.feature-box.fb-visible:focus-visible .fc-top-bar {
+  opacity: 1;
+  left: 6%;
+  right: 6%;
 }
 
 /* ── Inner card — the 3D tilting surface ────── */
@@ -4632,10 +4674,10 @@ html.loader-active .section-reveal {
   animation: none !important;
 }
 
-/* Freeze feature boxes entrance — hold invisible */
+/* While loader is active — keep feature boxes invisible, no animation yet */
 html.loader-active .feature-box {
   opacity: 0 !important;
-  transform: translateY(40px) scale(0.97) !important;
+  transform: translateY(40px) scale(0.98) !important;
   transition: none !important;
   animation: none !important;
 }
@@ -4646,19 +4688,16 @@ html.loader-active .video-section {
   transition: none !important;
 }
 
-/* Once loader done — re-enable natural transitions for section-reveal */
+/* Once loader done — section-reveal uses transitions as before */
 html:not(.loader-active) .section-reveal {
-  /* transitions now apply — IntersectionObserver will add .is-visible */
   transition:
     opacity   0.80s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.80s cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+/* Once loader done — feature boxes use keyframe animation (set by .fb-visible) */
 html:not(.loader-active) .feature-box {
-  transition:
-    opacity     0.70s cubic-bezier(0.22, 1, 0.36, 1),
-    transform   0.70s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow  0.18s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: none; /* keyframe handles entrance, not transition */
 }
 
 
@@ -5550,61 +5589,54 @@ body.sidebar-collapsed .main-content {
 
 
 /* ================================================================
-   CONTACT BUTTON — fixed top-right, cinematic gold style
+   CONTACT BUTTON — two instances:
+   .contact-btn-desktop  → fixed top-right, desktop only (≥901px)
+   .contact-btn (mobile) → inside .mobile-topbar, mobile only (≤900px)
    ================================================================ */
-.contact-btn {
-  position: fixed;
-  top: 18px;
-  right: 22px;
-  z-index: 1200;
+
+/* ── Shared appearance ──────────────────────────────────────── */
+.contact-btn,
+.contact-btn-desktop {
   display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 9px 18px 9px 14px;
-  background: rgba(10, 31, 68, 0.72);
-  border: 1px solid rgba(212, 175, 55, 0.55);
+  gap: 6px;
+  padding: 7px 14px 7px 11px;
+  background: rgba(20, 28, 48, 0.80);
+  border: 1px solid rgba(201, 162, 39, 0.45);
   border-radius: 50px;
   color: var(--gold);
   text-decoration: none;
   font-family: var(--font-display);
-  font-size: 0.72rem;
+  font-size: 0.64rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 2px 18px rgba(212, 175, 55, 0.12), 0 0 0 0 rgba(212, 175, 55, 0);
   cursor: pointer;
-  /* Entry animation */
-  opacity: 0;
-  transform: translateY(-12px);
-  animation: contactBtnEntry 0.7s cubic-bezier(0.22, 1, 0.36, 1) 1.2s forwards;
-  /* Hover transition */
+  white-space: nowrap;
+  flex-shrink: 0;
   transition:
-    background  0.28s var(--ease-out),
+    background   0.28s var(--ease-out),
     border-color 0.28s var(--ease-out),
-    box-shadow  0.28s var(--ease-out),
-    transform   0.22s var(--ease-out),
-    color       0.22s var(--ease-out);
-}
-
-@keyframes contactBtnEntry {
-  to { opacity: 1; transform: translateY(0); }
+    box-shadow   0.28s var(--ease-out),
+    transform    0.22s var(--ease-out),
+    color        0.22s var(--ease-out);
 }
 
 .contact-btn:hover,
-.contact-btn:focus-visible {
+.contact-btn:focus-visible,
+.contact-btn-desktop:hover,
+.contact-btn-desktop:focus-visible {
   background: rgba(212, 175, 55, 0.14);
   border-color: var(--gold);
-  box-shadow: 0 4px 28px rgba(212, 175, 55, 0.28), 0 0 0 2px rgba(212, 175, 55, 0.15);
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.22), 0 0 0 2px rgba(212, 175, 55, 0.12);
   transform: translateY(-2px);
   color: var(--gold-light);
   outline: none;
 }
 
-.contact-btn:active {
-  transform: translateY(0) scale(0.97);
-  box-shadow: 0 2px 12px rgba(212, 175, 55, 0.18);
+.contact-btn:active,
+.contact-btn-desktop:active {
+  transform: scale(0.96);
   transition-duration: 0.1s;
 }
 
@@ -5612,24 +5644,75 @@ body.sidebar-collapsed .main-content {
   flex-shrink: 0;
   transition: transform 0.22s var(--ease-out);
 }
-.contact-btn:hover .contact-btn-icon {
+.contact-btn:hover .contact-btn-icon,
+.contact-btn-desktop:hover .contact-btn-icon {
   transform: scale(1.15) rotate(-5deg);
 }
 
-.contact-btn-label {
-  line-height: 1;
+.contact-btn-label { line-height: 1; }
+
+/* ── DESKTOP button — fixed top-right, always visible ───────── */
+.contact-btn-desktop {
+  position: fixed;
+  top: 18px;
+  right: 22px;
+  z-index: 895;
+  padding: 9px 18px 9px 14px;
+  font-size: 0.72rem;
+  gap: 7px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 2px 18px rgba(212, 175, 55, 0.12);
+  /* Entry animation */
+  opacity: 0;
+  transform: translateY(-12px);
+  animation: contactBtnEntry 0.7s cubic-bezier(0.22, 1, 0.36, 1) 1.2s forwards;
 }
 
-/* On mobile: smaller, stays top-right but leaves room for topbar */
+@keyframes contactBtnEntry {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Hide desktop button on mobile */
 @media (max-width: 900px) {
-  .contact-btn {
-    top: 14px;
-    right: 14px;
-    padding: 8px 14px 8px 11px;
-    font-size: 0.66rem;
-    gap: 5px;
+  .contact-btn-desktop { display: none !important; }
+}
+
+/* ── MOBILE button — inline inside .mobile-topbar ───────────── */
+.contact-btn {
+  position: static;
+  margin-left: auto;
+  opacity: 1;
+  transform: none;
+  animation: none;
+  font-size: 0.60rem;
+  padding: 6px 12px 6px 9px;
+  gap: 5px;
+}
+
+/* Hide mobile button on desktop (it's inside mobile-topbar which is already hidden) */
+@media (min-width: 901px) {
+  .contact-btn { display: none !important; }
+  .contact-btn-desktop { display: flex !important; } /* always visible on desktop */
+}
+
+/* Mobile topbar layout — logo left, contact right */
+@media (max-width: 900px) {
+  .mobile-topbar {
+    justify-content: flex-start;
   }
 }
+
+/* ================================================================
+   Z-INDEX STACKING — modals always above everything
+   ================================================================ */
+.modal-overlay    { z-index: 1000 !important; }
+.gallery-overlay  { z-index: 1100 !important; }
+.quote-bubble     { z-index: 1200 !important; }
+.sidebar          { z-index: 1000 !important; }
+.sidebar-backdrop { z-index: 999  !important; }
+.mobile-topbar    { z-index: 880  !important; }
+.contact-btn-desktop { z-index: 895 !important; }
 
 /* ================================================================
    PROFESSIONAL COLOR ENHANCEMENT v4.0
@@ -5855,13 +5938,16 @@ body {
 }
 
 /* ── CONTACT BUTTON — refined palette ──────────────────────────── */
-.contact-btn {
+.contact-btn,
+.contact-btn-desktop {
   background: rgba(20, 28, 48, 0.80) !important;
   border-color: rgba(201,162,39,0.45) !important;
   color: var(--gold-light) !important;
 }
 .contact-btn:hover,
-.contact-btn:focus-visible {
+.contact-btn:focus-visible,
+.contact-btn-desktop:hover,
+.contact-btn-desktop:focus-visible {
   background: rgba(201,162,39,0.12) !important;
   border-color: var(--gold-light) !important;
   box-shadow: 0 4px 28px rgba(201,162,39,0.22), 0 0 0 2px rgba(201,162,39,0.12) !important;

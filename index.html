@@ -233,7 +233,7 @@
     </button>
   </nav>
 
-  <!-- Mobile top bar (logo only — mobile only) -->
+  <!-- Mobile top bar (logo + contact button — mobile only) -->
   <div class="mobile-topbar" id="mobileTopbar" aria-hidden="true">
     <a href="#" class="mobile-topbar-logo" id="mobileTopbarLogo" aria-label="marklorenz2.0 — go to top">
       <svg class="mobile-topbar-logo-svg" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -248,16 +248,21 @@
       </svg>
       <span class="mobile-topbar-brand">marklorenz<strong>2.0</strong></span>
     </a>
+    <!-- Contact button sits inside topbar on mobile, right-aligned -->
+    <a href="#footer" class="contact-btn" id="contactBtn" aria-label="Go to contact section">
+      <svg class="contact-btn-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="14" height="14" aria-hidden="true">
+        <path d="M2 4a2 2 0 012-2h12a2 2 0 012 2v9a2 2 0 01-2 2H6l-4 3V4z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+      </svg>
+      <span class="contact-btn-label">Contact</span>
+    </a>
   </div>
 
-  <!-- ============================================================
-       CONTACT BUTTON — fixed top-right
-       ============================================================ -->
-  <a href="#footer" class="contact-btn" id="contactBtn" aria-label="Go to contact section">
+  <!-- Contact button — desktop only (hidden on mobile via CSS) -->
+  <a href="#footer" class="contact-btn-desktop" id="contactBtnDesktop" aria-label="Go to contact section">
     <svg class="contact-btn-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="16" height="16" aria-hidden="true">
       <path d="M2 4a2 2 0 012-2h12a2 2 0 012 2v9a2 2 0 01-2 2H6l-4 3V4z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
     </svg>
-    <span class="contact-btn-label">Get in Touch</span>
+    <span class="contact-btn-label">Contact</span>
   </a>
 
   <!-- ============================================================
@@ -801,14 +806,16 @@
 
   <script src="script.js"></script>
   <script>
-    /* ── Contact button — smooth scroll to footer ── */
-    document.getElementById('contactBtn').addEventListener('click', function(e) {
+    /* ── Contact buttons — smooth scroll to footer ── */
+    function scrollToFooter(e) {
       e.preventDefault();
-      const footer = document.getElementById('footer');
-      if (footer) {
-        footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    });
+      var footer = document.getElementById('footer');
+      if (footer) footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    var btnMobile  = document.getElementById('contactBtn');
+    var btnDesktop = document.getElementById('contactBtnDesktop');
+    if (btnMobile)  btnMobile.addEventListener('click', scrollToFooter);
+    if (btnDesktop) btnDesktop.addEventListener('click', scrollToFooter);
   </script>
 </body>
 </html>

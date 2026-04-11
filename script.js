@@ -1202,7 +1202,9 @@ modalContent['itdigital'] = {
           revealObserver.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.10, rootMargin: '0px 0px -30px 0px' });
+    }, {
+      threshold: 0.1
+    });
     boxes.forEach(function(box) { revealObserver.observe(box); });
   } else {
     boxes.forEach(function(box) { box.classList.add('fb-visible'); });
