@@ -5548,3 +5548,540 @@ body.sidebar-collapsed .main-content {
   .mobile-topbar { display: none !important; }
 }
 
+
+/* ================================================================
+   CONTACT BUTTON — fixed top-right, cinematic gold style
+   ================================================================ */
+.contact-btn {
+  position: fixed;
+  top: 18px;
+  right: 22px;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px 9px 14px;
+  background: rgba(10, 31, 68, 0.72);
+  border: 1px solid rgba(212, 175, 55, 0.55);
+  border-radius: 50px;
+  color: var(--gold);
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 2px 18px rgba(212, 175, 55, 0.12), 0 0 0 0 rgba(212, 175, 55, 0);
+  cursor: pointer;
+  /* Entry animation */
+  opacity: 0;
+  transform: translateY(-12px);
+  animation: contactBtnEntry 0.7s cubic-bezier(0.22, 1, 0.36, 1) 1.2s forwards;
+  /* Hover transition */
+  transition:
+    background  0.28s var(--ease-out),
+    border-color 0.28s var(--ease-out),
+    box-shadow  0.28s var(--ease-out),
+    transform   0.22s var(--ease-out),
+    color       0.22s var(--ease-out);
+}
+
+@keyframes contactBtnEntry {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.contact-btn:hover,
+.contact-btn:focus-visible {
+  background: rgba(212, 175, 55, 0.14);
+  border-color: var(--gold);
+  box-shadow: 0 4px 28px rgba(212, 175, 55, 0.28), 0 0 0 2px rgba(212, 175, 55, 0.15);
+  transform: translateY(-2px);
+  color: var(--gold-light);
+  outline: none;
+}
+
+.contact-btn:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: 0 2px 12px rgba(212, 175, 55, 0.18);
+  transition-duration: 0.1s;
+}
+
+.contact-btn-icon {
+  flex-shrink: 0;
+  transition: transform 0.22s var(--ease-out);
+}
+.contact-btn:hover .contact-btn-icon {
+  transform: scale(1.15) rotate(-5deg);
+}
+
+.contact-btn-label {
+  line-height: 1;
+}
+
+/* On mobile: smaller, stays top-right but leaves room for topbar */
+@media (max-width: 900px) {
+  .contact-btn {
+    top: 14px;
+    right: 14px;
+    padding: 8px 14px 8px 11px;
+    font-size: 0.66rem;
+    gap: 5px;
+  }
+}
+
+/* ================================================================
+   PROFESSIONAL COLOR ENHANCEMENT v4.0
+   Goal: Elevate from "pure cinematic dark" to refined portfolio.
+   Strategy:
+     - Replace pitch-black backgrounds with deep slate-blue tones
+     - Soften gold to a warmer, more legible amber-gold
+     - Improve text contrast and body copy readability
+     - Add subtle depth with layered surface colors
+     - Refine borders and shadows for cleaner separation
+   No layout, animation, or structural changes.
+   ================================================================ */
+
+/* ── UPDATED DESIGN TOKENS ────────────────────────────────────── */
+:root {
+  /* Backgrounds — deep slate-blue instead of pure black */
+  --bg-base:        #0d1117;   /* site base: very dark blue-grey */
+  --bg-surface:     #161c26;   /* cards, sidebar: lifted surface */
+  --bg-elevated:    #1c2333;   /* hover surfaces, modals bg */
+  --bg-subtle:      #111826;   /* feature box bg */
+
+  /* Gold — slightly warmer, more refined */
+  --gold:           #c9a227;   /* deeper, richer gold */
+  --gold-light:     #debb50;   /* lighter accent */
+  --gold-muted:     #a8882a;   /* dimmed gold for borders */
+  --gold-dim:       rgba(201,162,39,0.30);
+  --gold-faint:     rgba(201,162,39,0.07);
+
+  /* Text — improved readability */
+  --text-main:      rgba(225, 232, 245, 0.94);  /* slightly cool white */
+  --text-muted:     rgba(180, 195, 218, 0.60);  /* readable muted */
+  --text-subtle:    rgba(160, 178, 205, 0.42);  /* placeholders */
+
+  /* Borders */
+  --border-subtle:  rgba(201,162,39,0.12);
+  --border-muted:   rgba(201,162,39,0.20);
+  --border-active:  rgba(201,162,39,0.42);
+
+  /* Updated shadows */
+  --shadow-card:      0 4px 24px rgba(0,0,6,0.28), 0 1px 4px rgba(0,0,0,0.18);
+  --shadow-card-hover: 0 14px 44px rgba(0,0,10,0.38), 0 2px 8px rgba(0,0,0,0.20);
+  --shadow-gold:      0 0 28px rgba(201,162,39,0.22);
+}
+
+/* ── BASE BODY — refined dark slate instead of pure black ──────── */
+body {
+  background: var(--bg-base) !important;
+}
+
+/* ── HERO — warmer, slightly lighter dark overlay ──────────────── */
+.hero-overlay {
+  background:
+    linear-gradient(
+      112deg,
+      rgba(8, 14, 28, 0.95) 0%,
+      rgba(12, 18, 36, 0.86) 35%,
+      rgba(8, 14, 28, 0.68) 65%,
+      rgba(4,  8, 18, 0.48) 100%
+    ) !important;
+}
+
+/* ── HERO BACKGROUND IMAGE — slightly brighter, more visible ───── */
+.hero-bg-img {
+  opacity: 0.46 !important;
+  filter: blur(1.5px) saturate(0.90) brightness(0.92) !important;
+}
+
+/* ── HERO BG OVERLAY — less opaque so bg image breathes ────────── */
+.hero-bg-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(8, 14, 28, 0.35)  0%,
+    rgba(10, 16, 32, 0.44) 40%,
+    rgba(8,  14, 28, 0.62) 75%,
+    rgba(5,   9, 20, 0.76) 100%
+  ) !important;
+}
+
+/* ── HERO TEXT — improved readability ──────────────────────────── */
+.hero-eyebrow {
+  color: var(--gold-light) !important;
+  opacity: 0.88 !important;
+}
+.hero-title .gold {
+  color: var(--gold-light) !important;
+  text-shadow:
+    0 0 40px rgba(201,162,39,0.18),
+    0 0 14px rgba(201,162,39,0.09) !important;
+}
+.hero-motto {
+  color: rgba(195, 210, 232, 0.72) !important;
+  border-left-color: var(--gold) !important;
+}
+.hero-intro {
+  color: rgba(190, 205, 228, 0.68) !important;
+}
+
+/* ── FEATURE BOXES — lifted surface color, not pitch-dark ──────── */
+.feature-boxes-bg-extension {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(10, 15, 28, 0.0)    0%,
+      rgba(12, 17, 30, 0.78)  18%,
+      rgba(13, 17, 23, 0.96)  42%,
+      #0d1117                 100%
+    ) !important;
+}
+
+.tilt-card-inner {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(24, 34, 60, 0.92) 0%,
+      rgba(16, 23, 44, 0.96) 60%,
+      rgba(12, 17, 32, 0.98) 100%
+    ) !important;
+  border-color: var(--border-subtle) !important;
+}
+
+.feature-box:hover .tilt-card-inner,
+.feature-box:focus-visible .tilt-card-inner {
+  border-color: var(--border-active) !important;
+  box-shadow:
+    0 24px 60px rgba(0,0,0,0.50),
+    0 4px 22px rgba(201,162,39,0.10),
+    0 0 0 1px rgba(201,162,39,0.14),
+    0 1px 0 rgba(255,255,255,0.06) inset !important;
+}
+
+/* Feature box content text */
+.fc-number {
+  color: rgba(201,162,39,0.22) !important;
+}
+.fc-title {
+  color: rgba(225,232,245,0.95) !important;
+}
+.fc-desc {
+  color: rgba(180,195,218,0.68) !important;
+}
+.fc-tag {
+  color: var(--gold-muted) !important;
+  border-color: var(--border-subtle) !important;
+}
+.fc-top-bar {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(201,162,39,0.50) 30%,
+    rgba(201,162,39,0.70) 50%,
+    rgba(201,162,39,0.50) 70%,
+    transparent
+  ) !important;
+}
+
+/* ── SIDEBAR — refined slate surface ───────────────────────────── */
+.sidebar {
+  background: linear-gradient(
+    180deg,
+    #141c2c 0%,
+    #111827 55%,
+    #0e1520 100%
+  ) !important;
+  border-right-color: rgba(201,162,39,0.10) !important;
+}
+
+.sidebar-nav-item {
+  color: rgba(180,195,218,0.55) !important;
+}
+.sidebar-nav-item:hover,
+.sidebar-nav-item.active {
+  color: var(--gold-light) !important;
+  background: rgba(201,162,39,0.06) !important;
+}
+.sidebar-nav-item.active {
+  border-right-color: var(--gold) !important;
+}
+
+.sidebar-logo-text {
+  color: rgba(225,232,245,0.85) !important;
+}
+
+/* ── MOBILE TOPBAR — refined slate ─────────────────────────────── */
+.mobile-topbar {
+  background: linear-gradient(160deg, #111827 0%, #141d2e 100%) !important;
+  border-bottom-color: rgba(201,162,39,0.10) !important;
+  box-shadow: 0 2px 24px rgba(0,0,0,0.45), 0 1px 0 rgba(201,162,39,0.07) !important;
+}
+
+/* ── BOTTOM NAV — refined slate ─────────────────────────────────── */
+.bottom-nav {
+  background: linear-gradient(180deg, rgba(17,24,39,0.97) 0%, rgba(13,17,23,0.99) 100%) !important;
+  border-top-color: rgba(201,162,39,0.10) !important;
+}
+.bottom-nav-item {
+  color: rgba(160,178,205,0.48) !important;
+}
+.bottom-nav-item.active,
+.bottom-nav-item:hover {
+  color: var(--gold-light) !important;
+}
+.bottom-nav-light {
+  color: rgba(201,162,39,0.50) !important;
+}
+
+/* ── HEADER (scrolled state) ────────────────────────────────────── */
+.header.scrolled {
+  background: rgba(13,17,23,0.96) !important;
+  border-bottom-color: var(--border-subtle) !important;
+  box-shadow:
+    0 2px 32px rgba(0,0,0,0.42),
+    0 0 1px rgba(201,162,39,0.09) !important;
+}
+.nav-link {
+  color: var(--text-muted) !important;
+}
+.nav-link:hover {
+  color: var(--gold-light) !important;
+  background: rgba(201,162,39,0.06) !important;
+}
+.nav-link::after {
+  background: linear-gradient(90deg, var(--gold), var(--gold-light)) !important;
+}
+
+/* ── CONTACT BUTTON — refined palette ──────────────────────────── */
+.contact-btn {
+  background: rgba(20, 28, 48, 0.80) !important;
+  border-color: rgba(201,162,39,0.45) !important;
+  color: var(--gold-light) !important;
+}
+.contact-btn:hover,
+.contact-btn:focus-visible {
+  background: rgba(201,162,39,0.12) !important;
+  border-color: var(--gold-light) !important;
+  box-shadow: 0 4px 28px rgba(201,162,39,0.22), 0 0 0 2px rgba(201,162,39,0.12) !important;
+  color: #f0d878 !important;
+}
+
+/* ── SCROLL PROGRESS BAR — refined gold ────────────────────────── */
+#scrollProgress {
+  background: linear-gradient(90deg, #8a6a18 0%, var(--gold) 45%, var(--gold-light) 100%) !important;
+}
+
+/* ── BUTTONS ────────────────────────────────────────────────────── */
+.btn-primary {
+  color: var(--gold-light) !important;
+  border-color: var(--gold) !important;
+}
+.btn-primary::before {
+  background: var(--gold) !important;
+}
+.btn-primary:hover {
+  color: #0d1117 !important;
+  border-color: var(--gold-light) !important;
+  box-shadow: 0 0 28px rgba(201,162,39,0.28), 0 4px 16px rgba(0,0,0,0.3) !important;
+}
+
+/* ── VIDEO SECTION — richer overlay ────────────────────────────── */
+.video-overlay {
+  background:
+    linear-gradient(180deg,
+      rgba(5,10,22,0.50)  0%,
+      rgba(8,14,28,0.24) 35%,
+      rgba(8,14,28,0.38) 65%,
+      rgba(5,10,22,0.65) 100%
+    ),
+    radial-gradient(ellipse at 50% 50%,
+      transparent 28%,
+      rgba(0,0,0,0.55) 100%
+    ) !important;
+}
+.video-title {
+  color: rgba(225,232,245,0.97) !important;
+  text-shadow:
+    0 2px 32px rgba(0,0,0,0.70),
+    0 0 60px rgba(201,162,39,0.10) !important;
+}
+.video-subtitle {
+  color: rgba(190,205,228,0.76) !important;
+}
+.video-eyebrow {
+  color: var(--gold-light) !important;
+}
+.video-eyebrow-line {
+  background: var(--gold) !important;
+  opacity: 0.60 !important;
+}
+.video-title-bar {
+  background: linear-gradient(90deg, var(--gold), var(--gold-light), transparent) !important;
+}
+
+/* ── IT SECTION — lifted background ────────────────────────────── */
+.it-section {
+  background: linear-gradient(
+    165deg,
+    #0e1420 0%,
+    #0d1117 45%,
+    #0b0f1a 100%
+  ) !important;
+}
+.it-title {
+  color: rgba(225,232,245,0.97) !important;
+}
+.it-quote {
+  color: var(--gold-light) !important;
+  border-left-color: var(--gold) !important;
+  opacity: 0.88 !important;
+}
+.it-paragraph {
+  color: rgba(180,195,218,0.72) !important;
+}
+.it-eyebrow {
+  color: var(--gold) !important;
+}
+.it-eyebrow-line {
+  background: var(--gold) !important;
+  opacity: 0.45 !important;
+}
+.btn-it-explore {
+  color: var(--gold-light) !important;
+  border-color: var(--gold) !important;
+}
+.btn-it-explore:hover {
+  background: var(--gold) !important;
+  color: #0d1117 !important;
+  box-shadow: 0 0 28px rgba(201,162,39,0.28) !important;
+}
+
+/* ── MODAL — clean white interior preserved, header refined ─────── */
+.modal-box {
+  box-shadow:
+    0 48px 100px rgba(0,0,0,0.55),
+    0 0 0 1px var(--border-subtle),
+    0 0 60px rgba(201,162,39,0.05) !important;
+  border-top-color: var(--gold) !important;
+}
+.m-title { color: var(--blue) !important; }
+.m-eyebrow { color: var(--gold) !important; }
+.m-card {
+  background: linear-gradient(140deg, #f8faff 0%, #f3f6fc 55%, #edf1fa 100%) !important;
+  border-left-color: var(--gold) !important;
+}
+
+/* ── FOOTER — refined dark surface ─────────────────────────────── */
+.footer {
+  background: linear-gradient(160deg, #090e18 0%, #080c14 60%, #070b12 100%) !important;
+  border-top-color: rgba(201,162,39,0.10) !important;
+}
+.footer-name { color: var(--gold-light) !important; }
+.footer-col-title { color: var(--gold) !important; }
+.footer-link:not(.static):hover { color: var(--gold-light) !important; }
+.footer-divider {
+  background: linear-gradient(90deg,
+    rgba(201,162,39,0.26) 0%,
+    rgba(201,162,39,0.10) 50%,
+    transparent 100%) !important;
+}
+
+/* ── GALLERY ─────────────────────────────────────────────────────── */
+.gallery-box {
+  background: linear-gradient(160deg, #111826 0%, #0d1420 55%, #091018 100%) !important;
+  border-color: var(--border-subtle) !important;
+}
+.gallery-title { color: rgba(225,232,245,0.97) !important; }
+.gallery-eyebrow { color: var(--gold) !important; }
+.poster-hover-label {
+  background: rgba(10,16,30,0.92) !important;
+  border-color: rgba(201,162,39,0.40) !important;
+  color: var(--gold-light) !important;
+}
+
+/* ── PROFILE HINT BADGE ─────────────────────────────────────────── */
+.profile-hint {
+  background: rgba(14,20,36,0.88) !important;
+  border-color: rgba(201,162,39,0.32) !important;
+}
+.profile-hint-text { color: rgba(201,162,39,0.88) !important; }
+.profile-hint-dot { background: var(--gold-light) !important; }
+
+/* ── QUOTE BUBBLE ───────────────────────────────────────────────── */
+.quote-bubble {
+  background: rgba(14,20,38,0.97) !important;
+  border-color: rgba(201,162,39,0.35) !important;
+}
+.quote-text { color: rgba(220,228,242,0.95) !important; }
+
+/* ── SCROLLBAR — refined gold ───────────────────────────────────── */
+::-webkit-scrollbar-track { background: #090d14 !important; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #9a7620, var(--gold) 40%, var(--gold-light) 70%, #9a7620) !important;
+}
+* { scrollbar-color: var(--gold) #090d14 !important; }
+
+/* ── SITE LOADER — refined ─────────────────────────────────────── */
+.loader-bg {
+  background: linear-gradient(160deg, #0d1117 0%, #111827 100%) !important;
+}
+.loader-brand { color: rgba(225,232,245,0.92) !important; }
+.loader-tagline { color: var(--gold) !important; }
+.loader-bar-track { background: rgba(201,162,39,0.12) !important; }
+.loader-bar-fill { background: linear-gradient(90deg, var(--gold-muted), var(--gold), var(--gold-light)) !important; }
+
+/* ── FLASHLIGHT BUTTON ──────────────────────────────────────────── */
+.flashlight-nav-btn {
+  background: rgba(16,22,38,0.88) !important;
+  border-color: rgba(201,162,39,0.20) !important;
+}
+.flashlight-nav-btn:hover {
+  background: rgba(20,28,52,0.96) !important;
+  border-color: rgba(201,162,39,0.48) !important;
+}
+.fl-btn-label { color: rgba(201,162,39,0.78) !important; }
+
+/* ── HAMBURGER BUTTON ────────────────────────────────────────────── */
+.hamburger {
+  background: rgba(14,20,34,0.90) !important;
+  border-color: rgba(201,162,39,0.22) !important;
+}
+.hamburger:hover {
+  border-color: rgba(201,162,39,0.46) !important;
+}
+
+/* ── PORTRAIT RINGS — softer gold ───────────────────────────────── */
+.portrait-ring-1 { border-color: rgba(201,162,39,0.20) !important; }
+.portrait-ring-2 { border-color: rgba(201,162,39,0.09) !important; }
+
+/* ── SCROLL HINT ─────────────────────────────────────────────────── */
+.scroll-line {
+  background: linear-gradient(to bottom, var(--gold), transparent) !important;
+}
+
+/* ── SKILL BARS — refined gradient ─────────────────────────────── */
+.skill-bar-fill {
+  background: linear-gradient(90deg, #0a1f44 0%, #1e4a9a 40%, var(--gold) 100%) !important;
+}
+
+/* ── IT MODAL CARDS ─────────────────────────────────────────────── */
+.it-m-card {
+  background: rgba(22,30,50,0.80) !important;
+  border-color: rgba(201,162,39,0.12) !important;
+}
+.it-m-card:hover {
+  background: rgba(201,162,39,0.06) !important;
+  border-color: rgba(201,162,39,0.25) !important;
+}
+.it-m-title { color: var(--gold-light) !important; }
+.it-m-eyebrow { color: rgba(201,162,39,0.70) !important; }
+
+/* ── LETTER BOX ─────────────────────────────────────────────────── */
+.letter-box {
+  background: #fefcf3 !important;
+  border-color: rgba(201,162,39,0.24) !important;
+  border-top-color: var(--gold) !important;
+}
+
