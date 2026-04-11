@@ -527,6 +527,17 @@ blockquote { border: none; margin: 0; padding: 0; }
   pointer-events: none;
   user-select: none;
 }
+
+/* On mobile the element is inside hero-text so we reset to normal flow */
+@media (max-width: 768px) {
+  .scroll-hint {
+    position: static;
+    transform: none;
+    display: flex;
+    margin: 1.2rem auto 0;
+    width: fit-content;
+  }
+}
 .scroll-line {
   display: block;
   width: 1px; height: 44px;
@@ -1165,24 +1176,11 @@ html:not(.loader-active) .hero-title .gold {
   .hero {
     min-height: 100svh;
     height: auto;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: stretch;
-  }
-
-  /* Scroll hint: take it out of absolute positioning so it
-     sits naturally below the camera icon instead of overlapping */
-  .scroll-hint {
-    position: static;
-    transform: none;
-    margin: 0.5rem auto 2rem;
-    width: fit-content;
-    opacity: 0.35;
   }
 
   .hero-content {
     grid-template-columns: 1fr;
-    padding: calc(var(--header-h) + 1.5rem) 1.25rem 1.5rem;
+    padding: calc(var(--header-h) + 1.5rem) 1.25rem 3rem;
     gap: 1.5rem;
     text-align: center;
   }
@@ -1511,29 +1509,10 @@ html:not(.loader-active) .hero-title .gold {
     filter    var(--t-med) var(--ease-out);
   will-change: transform;
 }
-.poster-img-wrap::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  border-radius: var(--radius-sm);
-  background: linear-gradient(
-    160deg,
-    rgba(212,175,55,0.18) 0%,
-    rgba(10,31,68,0.30)   60%,
-    rgba(0,0,0,0.50)      100%
-  );
-  opacity: 0;
-  transition: opacity 0.36s var(--ease-out);
-  pointer-events: none;
-}
-.poster-card:hover .poster-img-wrap::before {
-  opacity: 1;
-}
 .poster-card:hover .poster-img {
   transform: scale(1.06) translateY(-6px);
-  filter: saturate(1.18) contrast(1.06)
-          drop-shadow(0 20px 36px rgba(0,0,0,0.55));
+  filter: brightness(0.70)
+          drop-shadow(0 20px 36px rgba(0,0,0,0.72));
 }
 
 .poster-hover-label {
@@ -2049,15 +2028,14 @@ body::after {
 }
 .poster-card:hover .poster-img {
   transform: scale(1.06) translateY(-5px);
-  filter: saturate(1.18) contrast(1.06)
-    drop-shadow(0 22px 38px rgba(0,0,0,0.55));
+  filter:
+    brightness(0.72)
+    drop-shadow(0 22px 38px rgba(0,0,0,0.75));
 }
 .poster-card:hover .poster-img-wrap {
-  box-shadow:
-    0 18px 48px rgba(0,0,0,0.55),
-    0 0 0 1.5px rgba(212,175,55,0.28);
+  box-shadow: 0 18px 48px rgba(0,0,0,0.65);
 }
-/* No extra border overlay */
+/* No border / glow on poster hover */
 .poster-img-wrap::after { display: none; }
 
 
